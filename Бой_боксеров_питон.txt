@@ -1,0 +1,90 @@
+import random
+
+class Boxers():
+    base_hp = 2000
+    base_def = 100
+    base_str = 30
+    base_block = 5
+    base_glove = 3
+    
+    def __init__(self, name, boxing_school):
+        self.name = name
+        self.boxing_school = boxing_school
+    def attack_oponent(self, obj):
+        max_damage = (self.attack * self.strength + self.gloves) * self.block
+        damage = random.randint(1, max_damage)
+        chance_headshot = random.randint(1, int((10 + self.block)))
+        if chance_headshot > 5:
+            print(f'{self.name} ударил на {damage} hp {obj.name}')
+            obj.hp -= damage
+        else:
+            print(f'{self.name} увернулся от удара {obj.name}')
+        
+            
+    def is_stand_on_feet(self):
+        if self.hp <= 0:
+            return False
+        return True
+        
+class Hahol(Boxers):
+    boxing_school = "Klichko"
+    
+    def __init__(self, name):
+        self.name = name
+        self.hp = self.base_hp
+        self.strength = self.base_str
+        self.block = self.base_block 
+        self.gloves = 20
+        self.attack = 10
+class Zapad(Boxers):
+    boxing_school = "Tyson"
+    
+    def __init__(self, name):
+        self.name = name
+        self.hp = self.base_hp
+        self.strength = self.base_str 
+        self.block = self.base_block
+        self.gloves = 40
+        self.attack = 10
+class Game():
+    round = 1
+    
+    def __init__(self, boxer1, boxer2):
+        self.boxer1 = boxer1
+        self.boxer2 = boxer2
+        
+    @staticmethod
+    def hit_boxer(boxer1, boxer2):
+        boxer1.attack_oponent(boxer2)
+        return boxer2.is_stand_on_feet()
+        
+    def start_round(self):
+        if self.boxer1.is_stand_on_feet() and self.boxer2.is_stand_on_feet():
+            print(f'Round {self.round}')
+            if self.hit_boxer(self.boxer1, self.boxer2):
+                if self.hit_boxer(self.boxer2, self.boxer1):
+                    self.show_current_hp()
+                    return True
+                else:
+                    print(f'{self.boxer2.name} - WIN!')
+                    return False
+            else:
+                print(f'{self.boxer1.name} - WIN!')
+                return False
+                
+    def show_current_hp(self):
+        print(f'{self.boxer1.name}({self.boxer1.hp}) --- {self.boxer2.name}({self.boxer2.hp})')
+    
+    def fight(self):
+        print('####################')
+        while self.start_round():
+            self.round += 1
+            print('----------------------')
+            
+first_man = Hahol(name="Klichko")
+second_man = Zapad(name="Tyson")
+
+game1 = Game(first_man, second_man)
+
+game1.fight()
+game1.fight()
